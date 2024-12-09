@@ -32,12 +32,12 @@ const BaseConfig: ConfigBaseProps = {
    * This is a list of all the route names that will exit the app if the back button
    * is pressed while in that screen. Only affects Android.
    */
-  exitRoutes: ["Welcome"],
+  exitRoutes: ["(tabs/index)"],
 
   ads: {
     rewardedAdUnitId: __DEV__
       ? "ca-app-pub-3940256099942544/5224354917" // TestIds.REWARDED
-      : "ca-app-pub-2875410688436106/7203720130",
+      : "ca-app-pub-2875410688436106/YOUR_REWARDED_ID",
     bannerAdUnitId: __DEV__
       ? "ca-app-pub-3940256099942544/6300978111" // TestIds.BANNER
       : "ca-app-pub-2875410688436106/YOUR_BANNER_ID",
