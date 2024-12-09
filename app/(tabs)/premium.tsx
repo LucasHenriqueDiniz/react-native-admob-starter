@@ -1,13 +1,13 @@
 import { StyleSheet, View } from "react-native"
-import { Button, Card, Text } from "react-native-paper"
+import { Card, Text } from "react-native-paper"
 import { PlansCarousel } from "components/premium/PlansCarousel"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useTranslation } from "react-i18next"
 import { useRewardedAd } from "hooks/useRewardedAd"
 import { useState } from "react"
 import { useAppTheme } from "hooks/useAppTheme"
 import { Screen } from "components/Screen"
 import { useToast } from "hooks/useToast"
+import { Icon, Button } from "components"
 
 export default function PremiumScreen() {
   const { theme } = useAppTheme()
@@ -54,7 +54,7 @@ export default function PremiumScreen() {
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
       <View style={styles.root}>
         <View style={styles.header}>
-          <MaterialCommunityIcons name="crown" size={40} color={theme.colors.primary} />
+          <Icon icon="crown" size={40} color={theme.colors.primary} />
           <Text variant="headlineMedium">{t("premium.title")}</Text>
           <Text variant="bodyMedium" style={styles.subtitle}>
             {t("premium.subtitle")}
@@ -73,7 +73,7 @@ export default function PremiumScreen() {
 
         <Card style={styles.adCard} mode="outlined">
           <Card.Content style={styles.adCardContent}>
-            <MaterialCommunityIcons name="play-circle" size={32} color={theme.colors.primary} />
+            <Icon icon="play-circle" size={32} color={theme.colors.primary} />
             <View style={styles.adTextContainer}>
               <Text variant="bodyMedium">{t("premium.watchAd")}</Text>
               <Text variant="bodySmall">{t("premium.watchAdDescription")}</Text>
@@ -81,7 +81,7 @@ export default function PremiumScreen() {
           </Card.Content>
           <Card.Actions>
             <Button
-              mode="contained"
+              variant="contained"
               onPress={handleWatchAd}
               style={styles.adButton}
               loading={loading}

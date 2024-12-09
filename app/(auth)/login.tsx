@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { Button } from "components/index"
 import { Screen } from "components/Screen"
 import * as Crypto from "expo-crypto"
 import { Image } from "expo-image"
@@ -7,7 +7,7 @@ import { useAppTheme } from "hooks/useAppTheme"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
-import { Button, Text, TextInput, TouchableRipple } from "react-native-paper"
+import { Text, TextInput, TouchableRipple } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
 import isValidEmail from "utils/isValidEmail"
 
@@ -124,7 +124,7 @@ export default function LoginScreen() {
           {error && <Text style={[styles.errorText, { color: theme.colors.error }]}>{error}</Text>}
 
           <Button
-            mode="contained"
+            variant="contained"
             onPress={handleLogin}
             style={styles.loginButton}
             loading={loading}
@@ -150,10 +150,8 @@ export default function LoginScreen() {
 
         <View style={styles.socialButtons}>
           <Button
-            mode="outlined"
-            icon={() => (
-              <MaterialCommunityIcons name="google" size={20} color={theme.colors.onSurface} />
-            )}
+            variant="outlined"
+            icon="google"
             style={styles.socialButton}
             onPress={() => {
               /* Implementar login com Google */
@@ -163,10 +161,8 @@ export default function LoginScreen() {
           </Button>
 
           <Button
-            mode="outlined"
-            icon={() => (
-              <MaterialCommunityIcons name="apple" size={20} color={theme.colors.onSurface} />
-            )}
+            variant="outlined"
+            icon="apple"
             style={styles.socialButton}
             onPress={() => {
               /* Implementar login com Apple */

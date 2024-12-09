@@ -11,7 +11,7 @@ import {
 import { $styles } from "../theme"
 import { Icon, IconTypes } from "./Icon"
 import type { ThemedStyle } from "theme"
-import { useAppTheme } from "utils/useAppTheme"
+import { useAppTheme } from "hooks/useAppTheme"
 import { Text } from "react-native-paper"
 
 export interface ListItemProps extends TouchableOpacityProps {
@@ -113,18 +113,27 @@ export const ListItem = forwardRef<View, ListItemProps>(function ListItem(
   } = props
   const { themed } = useAppTheme()
 
-  const $textStyles = [$textStyle, $textStyleOverride, TextProps?.style]
+  const $textStyles = themed<TextStyle>([
+    $textStyle as StyleProp<TextStyle>,
+    $textStyleOverride,
+    TextProps?.style as StyleProp<TextStyle>,
+  ])
 
-  const $containerStyles = [
+  const $containerStyles = themed<ViewStyle>([
     topSeparator && $separatorTop,
     bottomSeparator && $separatorBottom,
     $containerStyleOverride,
-  ]
+  ])
 
-  const $touchableStyles = [$styles.row, $touchableStyle, { minHeight: height }, style]
+  const $touchableStyles = themed<ViewStyle>([
+    $styles.row,
+    $touchableStyle,
+    { minHeight: height },
+    style,
+  ])
 
   return (
-    <View ref={ref} style={themed($containerStyles)}>
+    <View ref={ref} style={$containerStyles}>
       <TouchableOpacity {...TouchableOpacityProps} style={$touchableStyles}>
         <ListItemAction
           side="left"
@@ -134,7 +143,7 @@ export const ListItem = forwardRef<View, ListItemProps>(function ListItem(
           Component={LeftComponent}
         />
 
-        <Text {...TextProps} style={themed($textStyles)}>
+        <Text {...TextProps} style={$textStyles}>
           {text}
         </Text>
 
@@ -154,11 +163,16 @@ export const ListItem = forwardRef<View, ListItemProps>(function ListItem(
  * @param {ListItemActionProps} props - The props for the `ListItemAction` component.
  * @returns {JSX.Element | null} The rendered `ListItemAction` component.
  */
-function ListItemAction(props: ListItemActionProps) {
+function ListItemAction(props: ListItemActionProps): JSX.Element | null {
   const { icon, Component, iconColor, size, side } = props
   const { themed } = useAppTheme()
 
-  const $iconContainerStyles = [$iconContainer]
+  const $iconContainerStyles = themed<ViewStyle>([
+    $iconContainer,
+    side === "left" && $iconContainerLeft,
+    side === "right" && $iconContainerRight,
+    { height: size },
+  ])
 
   if (Component) return Component
 
@@ -168,12 +182,7 @@ function ListItemAction(props: ListItemActionProps) {
         size={24}
         icon={icon}
         color={iconColor}
-        containerStyle={themed([
-          $iconContainerStyles,
-          side === "left" && $iconContainerLeft,
-          side === "right" && $iconContainerRight,
-          { height: size },
-        ])}
+        containerStyle={$iconContainerStyles as StyleProp<ViewStyle>}
       />
     )
   }

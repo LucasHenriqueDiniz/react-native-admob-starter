@@ -7,11 +7,11 @@ import {
   ViewProps,
   ViewStyle,
 } from "react-native"
-import { FontAwesome } from "@expo/vector-icons"
-import { useAppTheme } from "utils/useAppTheme"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useAppTheme } from "hooks/useAppTheme"
 
 // Definindo os tipos de ícones disponíveis do FontAwesome
-export type IconTypes = React.ComponentProps<typeof FontAwesome>["name"]
+export type IconTypes = React.ComponentProps<typeof MaterialCommunityIcons>["name"]
 
 interface IconProps extends Omit<TouchableOpacityProps, "style"> {
   /**
@@ -56,7 +56,7 @@ export function Icon(props: IconProps) {
       {...WrapperProps}
       style={$containerStyleOverride}
     >
-      <FontAwesome name={icon} size={size} color={color ?? theme.colors.text} />
+      <MaterialCommunityIcons name={icon} size={size} color={color ?? theme.colors.onSurface} />
     </Wrapper>
   )
 }

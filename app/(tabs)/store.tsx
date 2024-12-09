@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Screen } from "components/Screen"
 import { useAppTheme } from "hooks/useAppTheme"
 import { useCountdown } from "hooks/useCountdown"
@@ -7,8 +6,9 @@ import { useToast } from "hooks/useToast"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
-import { Button, Card, Text } from "react-native-paper"
+import { Card, Text } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
+import { Button, Icon } from "components"
 
 const AD_COOLDOWN = 5 * 60 * 1000 // 5 minutes in milliseconds
 
@@ -60,7 +60,7 @@ export default function StoreScreen() {
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
       <View style={styles.root}>
         <View style={styles.header}>
-          <MaterialCommunityIcons name="wallet" size={40} color={theme.colors.primary} />
+          <Icon icon="wallet" size={40} color={theme.colors.primary} />
           <Text variant="headlineMedium" style={styles.credits}>
             {t("store.yourCredits", { amount: credits })}
           </Text>
@@ -79,7 +79,7 @@ export default function StoreScreen() {
             </View>
           )}
           <Card.Content style={styles.adCardContent}>
-            <MaterialCommunityIcons name="play-circle" size={32} color={theme.colors.primary} />
+            <Icon icon="play-circle" size={32} color={theme.colors.primary} />
             <View style={styles.adTextContainer}>
               <Text variant="bodyMedium">{t("store.watchAdTitle")}</Text>
               <Text variant="bodySmall">{t("store.watchAdDescription")}</Text>
@@ -87,9 +87,9 @@ export default function StoreScreen() {
           </Card.Content>
           <Card.Actions>
             <Button
-              mode="contained"
+              variant="contained"
               onPress={handleWatchAd}
-              style={styles.buttonFull}
+              fullWidth
               loading={loading}
               disabled={loading || !canWatchAd}
             >
@@ -138,7 +138,7 @@ export default function StoreScreen() {
                 <View
                   style={[styles.packageHeader, pkg.featured === 2 && styles.packageHeaderBest]}
                 >
-                  <MaterialCommunityIcons name="cash-plus" size={24} color={theme.colors.primary} />
+                  <Icon icon="cash-plus" size={24} color={theme.colors.primary} />
                   <Text variant="titleMedium" style={styles.packageTitle}>
                     {t("store.creditsAmount", { amount: pkg.amount })}
                   </Text>
@@ -151,7 +151,7 @@ export default function StoreScreen() {
                 </Text>
               </Card.Content>
               <Card.Actions style={styles.packageActions}>
-                <Button mode="contained" style={styles.buttonFull}>
+                <Button variant="contained" fullWidth>
                   {t("store.buyNow")}
                 </Button>
               </Card.Actions>
@@ -171,17 +171,13 @@ export default function StoreScreen() {
           <Card style={styles.card} mode="outlined">
             <View style={[styles.cardDivider, { backgroundColor: theme.colors.outline }]} />
             <Button
-              mode="contained"
+              variant="contained"
               onPress={removeBanner}
               style={styles.removeBannerButton}
               contentStyle={styles.removeBannerContent}
             >
               <View style={styles.removeBannerInner}>
-                <MaterialCommunityIcons
-                  name="close-circle"
-                  size={24}
-                  color={theme.colors.surface}
-                />
+                <Icon icon="close-circle" size={24} color={theme.colors.surface} />
                 <View style={styles.removeBannerText}>
                   <Text variant="bodyLarge" style={{ color: theme.colors.surface }}>
                     {t("store.removeBanner")}
@@ -198,11 +194,7 @@ export default function StoreScreen() {
             <View style={[styles.cardDivider, { backgroundColor: theme.colors.outline }]} />
             <Card.Content style={styles.bannerRemovedContent}>
               <View style={styles.bannerRemovedInner}>
-                <MaterialCommunityIcons
-                  name="check-circle"
-                  size={24}
-                  color={theme.colors.primary}
-                />
+                <Icon icon="check-circle" size={24} color={theme.colors.primary} />
                 <Text variant="bodyMedium">{t("store.bannerRemoved")}</Text>
               </View>
             </Card.Content>
@@ -241,9 +233,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     zIndex: 1,
-  },
-  buttonFull: {
-    flex: 1,
   },
   card: {
     borderRadius: 16,
