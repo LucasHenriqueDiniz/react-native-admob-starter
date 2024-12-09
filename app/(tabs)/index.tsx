@@ -1,86 +1,104 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
-import { Text, View } from '@/components/Themed';
-import { useCreditsStore } from '@/components/useCreditsStore';
-import { RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
-
-const adUnitId = __DEV__ 
-  ? TestIds.REWARDED 
-  : 'ca-app-pub-2875410688436106/7203720130';
-
-const rewarded = RewardedAd.createForAdRequest(adUnitId);
+import { Screen } from "components/Screen"
+import { useRateUs } from "hooks/useRateUs"
+import { useRewardedAd } from "hooks/useRewardedAd"
+import { useRewardedAdPrompt } from "hooks/useRewardedAdPrompt"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { StyleSheet, View } from "react-native"
+import { Button, Text } from "react-native-paper"
+import { useNetworkStore } from "store/useNetworkStore"
+import { useUserStore } from "store/useUserStore"
 
 export default function TabOneScreen() {
-  const addCredits = useCreditsStore((state: any) => state.addCredits);
-  const credits = useCreditsStore((state: any) => state.credits);
-  const [loaded, setLoaded] = useState(false);
+  const { t } = useTranslation()
+  const credits = useUserStore((state: any) => state.credits)
+  const addCredits = useUserStore((state: any) => state.addCredits)
+  const [loading, setLoading] = useState(false)
+  const { setModalVisible: showNetworkModal } = useNetworkStore()
 
-  useEffect(() => {
-    const unsubscribeLoaded = rewarded.addAdEventListener(
-      RewardedAdEventType.LOADED, 
-      () => {
-        setLoaded(true);
-      }
-    );
+  const { openRateUsModal } = useRateUs({
+    onSuccessfulRate: () => {
+      addCredits(10)
+    },
+  })
 
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      reward => {
-        console.log('User earned reward of ', reward);
-        addCredits(10); // Add 10 credits when ad is completed
-      }
-    );
+  const { show: showRewardedAdPrompt } = useRewardedAdPrompt()
 
-    // Start loading the rewarded ad
-    rewarded.load();
+  const { showAd, loaded } = useRewardedAd({
+    onAdDismissed: () => setLoading(false),
+    onAdSuccess: () => {
+      addCredits(10)
+      setLoading(false)
+    },
+    onError: (error) => {
+      console.error("Ad error:", error)
+      setLoading(false)
+    },
+  })
 
-    // Unsubscribe from events on unmount
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-    };
-  }, []);
-
-  const handleShowAd = () => {
-    if (loaded) {
-      rewarded.show();
+  const handleShowAd = async () => {
+    try {
+      setLoading(true)
+      await showAd()
+    } catch (error) {
+      console.error("Error showing ad:", error)
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text>Credits: {credits}</Text>
-      <Button 
-        mode="contained" 
-        onPress={handleShowAd} 
-        style={styles.button}
-        disabled={!loaded}
-      >
-        {loaded ? 'Watch Rewarded Ad' : 'Ad Loading...'}
-      </Button>
-    </View>
-  );
+    <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
+      <View style={styles.content}>
+        <Text variant="headlineMedium" style={styles.title}>
+          {t("tabs.home")}
+        </Text>
+        <Text variant="titleMedium" style={styles.credits}>
+          {t("home.credits", { count: credits })}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <Button mode="contained" onPress={openRateUsModal} style={styles.button}>
+            debug: openRateUsModal
+          </Button>
+          <Button mode="contained" onPress={showRewardedAdPrompt} style={styles.button}>
+            debug: showRewardedAdPrompt
+          </Button>
+          <Button
+            mode="contained"
+            onPress={handleShowAd}
+            style={styles.button}
+            disabled={loading || !loaded}
+          >
+            debug: handleShowAd
+          </Button>
+          <Text>Debug: IsLoading: {loading ? "true" : "false"}</Text>
+          <Text>Debug: Loaded: {loaded ? "true" : "false"}</Text>
+          <Button mode="outlined" onPress={() => showNetworkModal(true)} style={styles.button}>
+            Test Network Modal
+          </Button>
+        </View>
+      </View>
+    </Screen>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  button: {
+    marginVertical: 8,
+    width: "100%",
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: "100%",
+  },
+  content: {
+    alignItems: "center",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
+  },
+  credits: {
+    marginTop: 8,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    marginBottom: 20,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  button: {
-    marginTop: 20,
-  },
-});
+})

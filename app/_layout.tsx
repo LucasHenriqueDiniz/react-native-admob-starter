@@ -1,66 +1,92 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/components/useColorScheme';
-
-import { useAdsStore } from '@/components/useAds';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+/* eslint-disable react-native/no-inline-styles */
+import { ErrorBoundary } from "components/ErrorScreen/ErrorBoundary"
+import { NetworkModal } from "components/NetworkModal"
+import { RateUsModal } from "components/RateUsModal"
+import { ThemeProvider } from "components/ThemeProvider"
+import { AdsProvider } from "components/ads/AdsProvider"
+import { RewardedAdPrompt } from "components/ads/RewardedAdPrompt"
+import Config from "config"
+import { useFonts } from "expo-font"
+import { Stack } from "expo-router"
+import * as SplashScreen from "expo-splash-screen"
+import { StatusBar } from "expo-status-bar"
+import { useAdsStore } from "hooks/useAds"
+import { useAppTheme } from "hooks/useAppTheme"
+import { initI18n } from "i18n"
+import { useEffect, useState } from "react"
+import { View } from "react-native"
+import { KeyboardProvider } from "react-native-keyboard-controller"
+import "react-native-reanimated"
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
+import { customFontsToLoad } from "theme"
+import { loadDateFnsLocale } from "utils/formatDate"
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+  const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad)
+  const [isI18nInitialized, setIsI18nInitialized] = useState(false)
+  const { theme, isDark } = useAppTheme()
+  const initAds = useAdsStore((state: any) => state.initAds)
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    initI18n()
+      .then(() => setIsI18nInitialized(true))
+      .then(() => loadDateFnsLocale())
+  }, [])
+
+  useEffect(() => {
+    if (fontLoadError) throw fontLoadError
+  }, [fontLoadError])
+
+  useEffect(() => {
+    if (areFontsLoaded && isI18nInitialized) {
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [areFontsLoaded, isI18nInitialized])
 
-  if (!loaded) {
-    return null;
+  useEffect(() => {
+    initAds()
+  }, [initAds])
+
+  if (!isI18nInitialized || (!areFontsLoaded && !fontLoadError)) {
+    return null
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const initAds = useAdsStore((state) => state.initAds);
-
-  useEffect(() => {
-    initAds();
-  }, []);
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
-  );
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <ErrorBoundary catchErrors={Config.catchErrors}>
+        <KeyboardProvider>
+          <ThemeProvider>
+            <AdsProvider>
+              <StatusBar style={isDark ? "light" : "dark"} />
+              <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+                <Stack
+                  screenOptions={{
+                    headerStyle: {
+                      backgroundColor: theme.colors.surface,
+                    },
+                    headerTintColor: theme.colors.onSurface,
+                    contentStyle: {
+                      backgroundColor: theme.colors.background,
+                    },
+                  }}
+                >
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                </Stack>
+              </View>
+              <NetworkModal />
+              <RateUsModal />
+              <RewardedAdPrompt />
+            </AdsProvider>
+          </ThemeProvider>
+        </KeyboardProvider>
+      </ErrorBoundary>
+    </SafeAreaProvider>
+  )
 }
+
+// Catch any errors thrown by the Layout component.
+export { ErrorBoundary } from "expo-router"

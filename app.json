@@ -4,38 +4,53 @@
     "slug": "admob",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/sora-icon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/placeholder.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#191015"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.admob"
+      "bundleIdentifier": "com.anonymous.admob",
+      "userInterfaceStyle": "light"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/placeholder.png",
+        "backgroundColor": "#191015"
       },
-      "package": "com.anonymous.admob"
+      "package": "com.anonymous.admob",
+      "userInterfaceStyle": "light"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/sora-icon.png"
     },
     "plugins": [
       "expo-router",
+      "expo-localization",
+      "expo-font",
       [
         "react-native-google-mobile-ads",
         {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you.",
           "androidAppId": "ca-app-pub-2875410688436106~5392839236",
           "iosAppId": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/placeholder.png",
+          "imageWidth": 300,
+          "resizeMode": "contain",
+          "backgroundColor": "#191015"
         }
       ]
     ],
