@@ -15,6 +15,15 @@ export interface ConfigBaseProps {
   termsUrl: string
   rateUsUrl: string
   appName: string
+  subscription: {
+    productIds: {
+      monthly: string
+      yearly: string
+    }
+  }
+  revenueCat: {
+    apiKey: string
+  }
 }
 
 export type PersistNavigationConfig = ConfigBaseProps["persistNavigation"]
@@ -54,6 +63,17 @@ const BaseConfig: ConfigBaseProps = {
   privacyUrl: "https://www.google.com",
   termsUrl: "https://www.google.com",
   rateUsUrl: "https://play.google.com/store/apps/details?id=com.anonymous.admob",
+  subscription: {
+    productIds: {
+      monthly: "your.monthly.subscription.id",
+      yearly: "your.yearly.subscription.id",
+    },
+  },
+  revenueCat: {
+    apiKey: __DEV__
+      ? "appl_YOUR_PUBLIC_SDK_KEY" // iOS
+      : "goog_YOUR_PUBLIC_SDK_KEY", // Android
+  },
 }
 
 export default BaseConfig

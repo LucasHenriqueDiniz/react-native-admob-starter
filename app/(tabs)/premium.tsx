@@ -1,19 +1,16 @@
+import { Button, Icon, Screen, SubscriptionList } from "components"
+import { useAppTheme, useRewardedAd, useSubscription, useToast } from "hooks"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { Card, Text } from "react-native-paper"
-import { PlansCarousel } from "components/premium/PlansCarousel"
-import { useTranslation } from "react-i18next"
-import { useRewardedAd } from "hooks/useRewardedAd"
-import { useState } from "react"
-import { useAppTheme } from "hooks/useAppTheme"
-import { Screen } from "components/Screen"
-import { useToast } from "hooks/useToast"
-import { Icon, Button } from "components"
 
 export default function PremiumScreen() {
   const { theme } = useAppTheme()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const showToast = useToast()
+  const { customerInfo } = useSubscription()
 
   const { showAd } = useRewardedAd({
     onAdDismissed: () => setLoading(false),
@@ -32,23 +29,7 @@ export default function PremiumScreen() {
     await showAd()
   }
 
-  const handleSubscribe = (planIndex: number) => {
-    console.log("Subscribe to plan", planIndex)
-  }
-
-  const PREMIUM_PLANS = [
-    {
-      title: t("premium.monthly"),
-      price: t("premium.priceMonthly"),
-      description: t("premium.monthlyDescription"),
-    },
-    {
-      title: t("premium.yearly"),
-      price: t("premium.priceYearly"),
-      description: t("premium.yearlyDescription"),
-      featured: true,
-    },
-  ]
+  const isPremium = customerInfo?.entitlements.active.premium?.isActive
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
@@ -61,38 +42,42 @@ export default function PremiumScreen() {
           </Text>
         </View>
 
-        <PlansCarousel plans={PREMIUM_PLANS} onSubscribe={handleSubscribe} />
+        <SubscriptionList />
 
-        <View style={styles.dividerContainer}>
-          <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
-          <Text variant="titleMedium" style={[styles.orText, { color: theme.colors.primary }]}>
-            {t("premium.or")}
-          </Text>
-          <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
-        </View>
-
-        <Card style={styles.adCard} mode="outlined">
-          <Card.Content style={styles.adCardContent}>
-            <Icon icon="play-circle" size={32} color={theme.colors.primary} />
-            <View style={styles.adTextContainer}>
-              <Text variant="bodyMedium">{t("premium.watchAd")}</Text>
-              <Text variant="bodySmall">{t("premium.watchAdDescription")}</Text>
+        {!isPremium && (
+          <>
+            <View style={styles.dividerContainer}>
+              <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
+              <Text variant="titleMedium" style={[styles.orText, { color: theme.colors.primary }]}>
+                {t("premium.or")}
+              </Text>
+              <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
             </View>
-          </Card.Content>
-          <Card.Actions style={styles.adCardActions}>
-            <Button
-              variant="contained"
-              onPress={handleWatchAd}
-              loading={loading}
-              fullWidth
-              size="large"
-              icon="play-circle"
-              uppercase={false}
-            >
-              {t("premium.watchAd")}
-            </Button>
-          </Card.Actions>
-        </Card>
+
+            <Card style={styles.adCard} mode="outlined">
+              <Card.Content style={styles.adCardContent}>
+                <Icon icon="play-circle" size={32} color={theme.colors.primary} />
+                <View style={styles.adTextContainer}>
+                  <Text variant="bodyMedium">{t("premium.watchAd")}</Text>
+                  <Text variant="bodySmall">{t("premium.watchAdDescription")}</Text>
+                </View>
+              </Card.Content>
+              <Card.Actions style={styles.adCardActions}>
+                <Button
+                  variant="contained"
+                  onPress={handleWatchAd}
+                  loading={loading}
+                  fullWidth
+                  size="large"
+                  icon="play-circle"
+                  uppercase={false}
+                >
+                  {t("premium.watchAd")}
+                </Button>
+              </Card.Actions>
+            </Card>
+          </>
+        )}
       </View>
     </Screen>
   )

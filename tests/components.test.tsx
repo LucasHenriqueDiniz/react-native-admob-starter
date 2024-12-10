@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react-native"
-import { Button } from "components/Button"
+import { Button } from "components"
 import { Text } from "react-native"
 
 describe("Basic Components", () => {
@@ -7,7 +7,7 @@ describe("Basic Components", () => {
     const { getByText } = render(
       <Button onPress={() => {}}>
         <Text>Test Button</Text>
-      </Button>,
+      </Button>
     )
 
     expect(getByText("Test Button")).toBeTruthy()

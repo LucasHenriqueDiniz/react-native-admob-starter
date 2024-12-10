@@ -1,13 +1,12 @@
-import { Screen } from "components/Screen"
+import { Button, Screen } from "components"
+import * as Crypto from "expo-crypto"
+import { router } from "expo-router"
 import { useAppTheme } from "hooks/useAppTheme"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { Text, TextInput } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
-import { router } from "expo-router"
-import { useTranslation } from "react-i18next"
-import * as Crypto from "expo-crypto"
-import { Button } from "components/Button"
 
 export default function SignUpScreen() {
   const { theme } = useAppTheme()

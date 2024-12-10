@@ -1,10 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import { ErrorBoundary } from "components/ErrorScreen/ErrorBoundary"
-import { NetworkModal } from "components/NetworkModal"
-import { RateUsModal } from "components/RateUsModal"
-import { ThemeProvider } from "components/ThemeProvider"
-import { AdsProvider } from "components/ads/AdsProvider"
-import { RewardedAdPrompt } from "components/ads/RewardedAdPrompt"
+import {
+  SubscriptionProvider,
+  RewardedAdPrompt,
+  AdsProvider,
+  ThemeProvider,
+  NetworkModal,
+  RateUsModal,
+  ErrorBoundary,
+} from "components"
 import Config from "config"
 import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
@@ -60,26 +63,28 @@ export default function RootLayout() {
         <KeyboardProvider>
           <ThemeProvider>
             <AdsProvider>
-              <StatusBar style={isDark ? "light" : "dark"} />
-              <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-                <Stack
-                  screenOptions={{
-                    headerStyle: {
-                      backgroundColor: theme.colors.surface,
-                    },
-                    headerTintColor: theme.colors.onSurface,
-                    contentStyle: {
-                      backgroundColor: theme.colors.background,
-                    },
-                  }}
-                >
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                </Stack>
-              </View>
-              <NetworkModal />
-              <RateUsModal />
-              <RewardedAdPrompt />
+              <SubscriptionProvider>
+                <StatusBar style={isDark ? "light" : "dark"} />
+                <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+                  <Stack
+                    screenOptions={{
+                      headerStyle: {
+                        backgroundColor: theme.colors.surface,
+                      },
+                      headerTintColor: theme.colors.onSurface,
+                      contentStyle: {
+                        backgroundColor: theme.colors.background,
+                      },
+                    }}
+                  >
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                  </Stack>
+                </View>
+                <NetworkModal />
+                <RateUsModal />
+                <RewardedAdPrompt />
+              </SubscriptionProvider>
             </AdsProvider>
           </ThemeProvider>
         </KeyboardProvider>

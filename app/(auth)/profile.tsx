@@ -1,15 +1,15 @@
-import { Button } from "components/Button"
-import { ListView } from "components/ListView"
-import { Screen } from "components/Screen"
+import { Button, ListView, Screen } from "components"
 import { router } from "expo-router"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { Avatar, Divider, List, Text } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
+import { useSubscription } from "hooks"
 
 export default function ProfileScreen() {
   const { t } = useTranslation()
-  const { profile, credits, logout, subscription } = useUserStore()
+  const { profile, credits, logout } = useUserStore()
+  const { customerInfo } = useSubscription()
 
   const handleLogout = () => {
     logout()
@@ -17,6 +17,13 @@ export default function ProfileScreen() {
   }
 
   if (!profile) return router.push("/(auth)/login")
+
+  const activePlan = customerInfo?.entitlements.active.premium
+  const planName = activePlan?.isActive
+    ? activePlan.productIdentifier.includes("yearly")
+      ? t("subscription.yearly")
+      : t("subscription.monthly")
+    : t("profile.noPlan")
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
@@ -45,8 +52,8 @@ export default function ProfileScreen() {
             },
             {
               title: t("profile.currentPlan"),
-              description: subscription?.name ?? t("profile.noPlan"),
-              icon: "storefront-outline",
+              description: planName,
+              icon: "crown",
               onPress: () => {
                 router.push("/(tabs)/premium")
               },

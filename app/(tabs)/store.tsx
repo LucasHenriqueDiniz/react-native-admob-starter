@@ -1,11 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 import { Button, Icon, Screen } from "components"
-import { useAppTheme, useCountdown, useRewardedAd } from "hooks"
+import { useAppTheme, useCountdown, useRewardedAd, useSubscription } from "hooks"
 import { useToast } from "hooks/useToast"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { Card, Text } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
+import type { PurchasesPackage } from "react-native-purchases"
 
 const AD_COOLDOWN = 5 * 60 * 1000 // 5 minutes in milliseconds
 
@@ -14,8 +16,13 @@ export default function StoreScreen() {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const showToast = useToast()
-  const { addCredits, lastAdWatch, setLastAdWatch, hasBannerRemoved, removeBanner, credits } =
+  const { lastAdWatch, setLastAdWatch, hasBannerRemoved, removeBanner, credits, addCredits } =
     useUserStore()
+  const { packages, purchasePackage, loading: purchaseLoading } = useSubscription()
+
+  const creditPackages = packages.filter(
+    (pkg) => pkg.product.identifier.startsWith("credits_") || pkg.identifier.startsWith("credits_")
+  )
 
   const canWatchAd = !lastAdWatch || Date.now() - lastAdWatch >= AD_COOLDOWN
 
@@ -39,6 +46,22 @@ export default function StoreScreen() {
     await showAd()
   }
 
+  const handlePurchaseCredits = async (pkg: PurchasesPackage) => {
+    try {
+      const customerInfo = await purchasePackage(pkg)
+      if (customerInfo) {
+        // Extrair a quantidade de créditos do identificador do produto
+        // Exemplo: "credits_100" -> 100 créditos
+        const amount = parseInt(pkg.product.identifier.split("_")[1])
+        addCredits(amount)
+        showToast(t("store.purchaseSuccess"))
+      }
+    } catch (error) {
+      console.error("Purchase error:", error)
+      showToast(t("store.purchaseError"))
+    }
+  }
+
   const remainingSeconds = useCountdown(lastAdWatch)
 
   const formatTime = (seconds: number) => {
@@ -46,12 +69,6 @@ export default function StoreScreen() {
     const remainingSeconds = seconds % 60
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
   }
-
-  const CREDIT_PACKAGES = [
-    { amount: 100, price: 0.99, featured: 0 },
-    { amount: 500, price: 3.99, featured: 1 },
-    { amount: 1000, price: 6.99, featured: 2 },
-  ]
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
@@ -104,27 +121,20 @@ export default function StoreScreen() {
         </View>
 
         <View style={styles.packages}>
-          {CREDIT_PACKAGES.map((pkg, index) => (
+          {creditPackages.map((pkg, index) => (
             <Card
-              key={index}
+              key={pkg.identifier}
               style={[
                 styles.packageCard,
-                pkg.featured === 1 && [
-                  styles.packageCardMedium,
-                  { borderColor: theme.colors.primary },
-                ],
-                pkg.featured === 2 && [
-                  styles.packageCardBest,
-                  { borderColor: theme.colors.primary },
-                ],
+                index === 1 && [styles.packageCardMedium, { borderColor: theme.colors.primary }],
+                index === 2 && [styles.packageCardBest, { borderColor: theme.colors.primary }],
               ]}
               mode="outlined"
             >
-              {pkg.featured === 2 && (
+              {index === 2 && (
                 <View style={[styles.bestValueBadge, { backgroundColor: theme.colors.primary }]}>
                   <Text
                     variant="labelSmall"
-                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{ color: theme.colors.inverseSurface, fontWeight: "bold" }}
                   >
                     {t("store.bestValue")}
@@ -132,23 +142,26 @@ export default function StoreScreen() {
                 </View>
               )}
               <Card.Content style={styles.packageContent}>
-                <View
-                  style={[styles.packageHeader, pkg.featured === 2 && styles.packageHeaderBest]}
-                >
+                <View style={[styles.packageHeader, index === 2 && styles.packageHeaderBest]}>
                   <Icon icon="cash-plus" size={24} color={theme.colors.primary} />
                   <Text variant="titleMedium" style={styles.packageTitle}>
-                    {t("store.creditsAmount", { amount: pkg.amount })}
+                    {pkg.product.title}
                   </Text>
                 </View>
                 <Text
                   variant="titleLarge"
                   style={[styles.packagePrice, { color: theme.colors.primary }]}
                 >
-                  ${pkg.price}
+                  {pkg.product.priceString}
                 </Text>
               </Card.Content>
               <Card.Actions style={styles.packageActions}>
-                <Button variant="contained" fullWidth>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  loading={purchaseLoading}
+                  onPress={() => handlePurchaseCredits(pkg)}
+                >
                   {t("store.buyNow")}
                 </Button>
               </Card.Actions>

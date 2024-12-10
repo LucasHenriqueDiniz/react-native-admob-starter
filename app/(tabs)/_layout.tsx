@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import FontAwesome from "@expo/vector-icons/FontAwesome"
-import { BannerAdLayout } from "components/ads/BannerAdLayout"
+import { BannerAdLayout, Icon } from "components"
 import { Link, Tabs } from "expo-router"
-import { useAppTheme } from "hooks/useAppTheme"
+import { useAppTheme } from "hooks"
 import { useTranslation } from "react-i18next"
 import { Pressable, StyleSheet, View } from "react-native"
 import { useUserStore } from "store/useUserStore"
@@ -44,11 +44,11 @@ export default function TabLayout() {
                 <Link href={isLoggedIn ? "/(auth)/profile" : "/(auth)/login"} asChild>
                   <Pressable>
                     {({ pressed }) => (
-                      <FontAwesome
-                        name={isLoggedIn ? "user" : "user-o"}
+                      <Icon
+                        icon={isLoggedIn ? "face-man" : "login"}
                         size={25}
                         color={theme.colors.onSurface}
-                        style={[styles.headerRight, { opacity: pressed ? 0.5 : 1 }]}
+                        containerStyle={[styles.headerRight, { opacity: pressed ? 0.5 : 1 }]}
                       />
                     )}
                   </Pressable>
