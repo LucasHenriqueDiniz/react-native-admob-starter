@@ -1,5 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome"
-import { Button } from "components"
+import { Button, Icon } from "components"
 import Config from "config"
 import { useAppTheme } from "hooks/useAppTheme"
 import { useState } from "react"
@@ -42,13 +41,7 @@ export function RateUsModal() {
         <View style={styles.content}>
           <View style={styles.starsContainer}>
             {[1, 2, 3, 4, 5].map((star) => (
-              <FontAwesome
-                key={star}
-                name="star"
-                size={32}
-                color={theme.colors.primary}
-                style={styles.star}
-              />
+              <Icon key={star} icon="star" size={32} color={theme.colors.primary} />
             ))}
           </View>
           <Text variant="headlineSmall" style={styles.title}>
@@ -111,9 +104,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 20,
     padding: 20,
-  },
-  star: {
-    marginHorizontal: 4,
   },
   starsContainer: {
     flexDirection: "row",
