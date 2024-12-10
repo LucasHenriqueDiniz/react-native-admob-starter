@@ -1,11 +1,11 @@
-import { Screen } from "components/Screen"
+import { Screen, Button } from "components"
 import { useRateUs } from "hooks/useRateUs"
 import { useRewardedAd } from "hooks/useRewardedAd"
 import { useRewardedAdPrompt } from "hooks/useRewardedAdPrompt"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
-import { Button, Text } from "react-native-paper"
+import { Text } from "react-native-paper"
 import { useNetworkStore } from "store/useNetworkStore"
 import { useUserStore } from "store/useUserStore"
 
@@ -56,23 +56,18 @@ export default function TabOneScreen() {
           {t("home.credits", { count: credits })}
         </Text>
         <View style={styles.buttonContainer}>
-          <Button mode="contained" onPress={openRateUsModal} style={styles.button}>
+          <Button variant="contained" onPress={openRateUsModal}>
             debug: openRateUsModal
           </Button>
-          <Button mode="contained" onPress={showRewardedAdPrompt} style={styles.button}>
+          <Button variant="contained" onPress={showRewardedAdPrompt}>
             debug: showRewardedAdPrompt
           </Button>
-          <Button
-            mode="contained"
-            onPress={handleShowAd}
-            style={styles.button}
-            disabled={loading || !loaded}
-          >
+          <Button variant="contained" onPress={handleShowAd} disabled={loading || !loaded}>
             debug: handleShowAd
           </Button>
           <Text>Debug: IsLoading: {loading ? "true" : "false"}</Text>
           <Text>Debug: Loaded: {loaded ? "true" : "false"}</Text>
-          <Button mode="outlined" onPress={() => showNetworkModal(true)} style={styles.button}>
+          <Button variant="outlined" onPress={() => showNetworkModal(true)}>
             Test Network Modal
           </Button>
         </View>
@@ -82,11 +77,9 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    marginVertical: 8,
-    width: "100%",
-  },
   buttonContainer: {
+    flexDirection: "column",
+    gap: 8,
     marginTop: 20,
     width: "100%",
   },

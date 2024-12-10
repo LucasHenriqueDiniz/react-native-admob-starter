@@ -1,15 +1,11 @@
-import { LanguageModal } from "components/settings/LanguageModal"
-import { SuggestionModal } from "components/settings/SuggestionModal"
 import Config from "config"
 import { ExternalPathString, Link } from "expo-router"
-import { languages, useAppLanguage } from "hooks/useAppLanguage"
-import { useAppTheme } from "hooks/useAppTheme"
+import { languages, useAppLanguage, useAppTheme } from "hooks"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Pressable, ScrollView, StyleSheet } from "react-native"
-import { Button } from "components/Button"
+import { Button, Screen, LanguageModal, SuggestionModal } from "components"
 import { Divider, List, Switch } from "react-native-paper"
-import { Screen } from "components/Screen"
 
 export default function SettingsScreen() {
   const { t } = useTranslation()
@@ -35,8 +31,8 @@ export default function SettingsScreen() {
           <Button
             icon="message-draw"
             onPress={() => setFeedbackVisible(true)}
-            style={styles.actionButton}
             fullWidth
+            iconPosition="right"
           >
             {t("settings.sendFeedback")}
           </Button>
@@ -107,6 +103,7 @@ export default function SettingsScreen() {
         </List.Section>
 
         <SuggestionModal visible={feedbackVisible} onDismiss={() => setFeedbackVisible(false)} />
+
         <LanguageModal
           visible={languageModalVisible}
           onDismiss={() => setLanguageModalVisible(false)}
@@ -122,9 +119,6 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  actionButton: {
-    borderRadius: 12,
-  },
   container: {
     flex: 1,
     padding: 16,

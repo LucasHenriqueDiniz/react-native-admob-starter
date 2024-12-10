@@ -2,11 +2,12 @@ import { Screen } from "components/Screen"
 import { useAppTheme } from "hooks/useAppTheme"
 import { useState } from "react"
 import { StyleSheet, View } from "react-native"
-import { Button, Text, TextInput } from "react-native-paper"
+import { Text, TextInput } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
 import { router } from "expo-router"
 import { useTranslation } from "react-i18next"
 import * as Crypto from "expo-crypto"
+import { Button } from "components/Button"
 
 export default function SignUpScreen() {
   const { theme } = useAppTheme()
@@ -150,7 +151,7 @@ export default function SignUpScreen() {
           {error && <Text style={[styles.errorText, { color: theme.colors.error }]}>{error}</Text>}
 
           <Button
-            mode="contained"
+            variant="contained"
             onPress={handleSignUp}
             style={styles.button}
             loading={loading}
@@ -159,7 +160,14 @@ export default function SignUpScreen() {
             {t("auth.signUp")}
           </Button>
 
-          <Button mode="text" onPress={() => router.back()} style={styles.backButton}>
+          <Button
+            variant="text"
+            onPress={() => router.back()}
+            style={styles.backButton}
+            loading={loading}
+            disabled={loading}
+            size="small"
+          >
             {t("auth.backToLogin")}
           </Button>
         </View>

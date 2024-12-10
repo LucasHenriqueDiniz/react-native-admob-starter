@@ -13,6 +13,8 @@ const ja: Translations = {
     watchShortVideoToEarnCredits: "短い動画を見てクレジットを獲得します",
     notFound: "404 - ページが見つかりません",
     return: "ホーム画面に戻る",
+    google: "Google",
+    apple: "Apple",
   },
   rateUs: {
     title: "アプリはどうですか？",
@@ -141,7 +143,9 @@ const ja: Translations = {
   },
   profile: {
     logout: "ログアウト",
-    credits: "クレジット: {{count}}",
+    credits: "クレジット",
+    noPlan: "フリー",
+    currentPlan: "現在のプラン",
   },
 }
 

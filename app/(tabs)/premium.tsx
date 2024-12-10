@@ -79,13 +79,15 @@ export default function PremiumScreen() {
               <Text variant="bodySmall">{t("premium.watchAdDescription")}</Text>
             </View>
           </Card.Content>
-          <Card.Actions>
+          <Card.Actions style={styles.adCardActions}>
             <Button
               variant="contained"
               onPress={handleWatchAd}
-              style={styles.adButton}
               loading={loading}
-              disabled={loading}
+              fullWidth
+              size="large"
+              icon="play-circle"
+              uppercase={false}
             >
               {t("premium.watchAd")}
             </Button>
@@ -97,24 +99,27 @@ export default function PremiumScreen() {
 }
 
 const styles = StyleSheet.create({
-  adButton: {
-    flex: 1,
-    marginBottom: 8,
-    marginHorizontal: 8,
-    paddingVertical: 8,
-  },
   adCard: {
     borderRadius: 16,
     marginHorizontal: 24,
+    overflow: "hidden",
+  },
+  adCardActions: {
+    flexDirection: "column",
+    margin: 0,
+    paddingBottom: 12,
+    paddingRight: 24,
+    width: "100%",
   },
   adCardContent: {
     alignItems: "center",
     flexDirection: "row",
     gap: 16,
-    paddingVertical: 8,
+    padding: 16,
   },
   adTextContainer: {
     flex: 1,
+    marginLeft: 4,
   },
   divider: {
     flex: 1,

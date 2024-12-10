@@ -13,6 +13,8 @@ const ar: Translations = {
     watchShortVideoToEarnCredits: "شاهد فيديو مختصر لجني الرصيد",
     notFound: "404 - الصفحة غير موجودة",
     return: "العودة إلى الصفحة الرئيسية",
+    google: "جوجل",
+    apple: "أبل",
   },
   rateUs: {
     title: "هل تستمتع بالتطبيق؟",
@@ -142,8 +144,10 @@ const ar: Translations = {
     removeBanner: "إزالة الإعلانات",
   },
   profile: {
-    credits: "الرصيد: {{count}}",
+    credits: "الرصيد",
     logout: "تسجيل الخروج",
+    noPlan: "مجاني",
+    currentPlan: "المستوى الحالي",
   },
 }
 

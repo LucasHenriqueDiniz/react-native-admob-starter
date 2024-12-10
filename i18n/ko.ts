@@ -13,6 +13,8 @@ const ko: Translations = {
     watchShortVideoToEarnCredits: "짧은 영상을 보고 크레딧을 얻으세요",
     notFound: "404 - 페이지를 찾을 수 없습니다",
     return: "홈 화면으로 돌아가기",
+    google: "Google",
+    apple: "Apple",
   },
   network: {
     title: "인터넷 연결이 없습니다",
@@ -141,7 +143,9 @@ const ko: Translations = {
   },
   profile: {
     logout: "로그아웃",
-    credits: "크레딧: {{count}}",
+    credits: "크레딧",
+    noPlan: "무료",
+    currentPlan: "현재 플랜",
   },
 }
 

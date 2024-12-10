@@ -1,11 +1,11 @@
-import { Screen } from "components/Screen"
-import { useAppTheme } from "hooks/useAppTheme"
-import { useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { Button, Text, TextInput } from "react-native-paper"
+import { Button, Screen } from "components"
 import { router } from "expo-router"
+import { useAppTheme, useToast } from "hooks"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useToast } from "hooks/useToast"
+import { StyleSheet, View } from "react-native"
+import { Text, TextInput } from "react-native-paper"
+import isValidEmail from "utils/isValidEmail"
 
 export default function ForgotPasswordScreen() {
   const { theme } = useAppTheme()
@@ -14,10 +14,6 @@ export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
 
   const handleResetPassword = async () => {
     try {
@@ -80,16 +76,15 @@ export default function ForgotPasswordScreen() {
           {error && <Text style={[styles.errorText, { color: theme.colors.error }]}>{error}</Text>}
 
           <Button
-            mode="contained"
+            variant="elevated"
             onPress={handleResetPassword}
-            style={styles.button}
             loading={loading}
-            disabled={loading || !email}
+            disabled={!email}
           >
             {t("auth.resetPassword")}
           </Button>
 
-          <Button mode="text" onPress={() => router.back()} style={styles.backButton}>
+          <Button variant="text" onPress={() => router.back()} icon="arrow-left" size="small">
             {t("auth.backToLogin")}
           </Button>
         </View>
@@ -99,12 +94,6 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    marginTop: 8,
-  },
-  button: {
-    marginTop: 24,
-  },
   container: {
     flex: 1,
     padding: 24,

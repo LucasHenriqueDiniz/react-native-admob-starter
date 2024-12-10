@@ -13,6 +13,8 @@ const pt: Translations = {
     watchShortVideoToEarnCredits: "Assista um vídeo curto para ganhar créditos",
     notFound: "404 - Página não encontrada",
     return: "Voltar para a página principal",
+    google: "Google",
+    apple: "Apple",
   },
   rateUs: {
     title: "A aplicação é como?",
@@ -141,7 +143,9 @@ const pt: Translations = {
   },
   profile: {
     logout: "Sair",
-    credits: "Créditos: {{count}}",
+    credits: "Créditos",
+    noPlan: "Free",
+    currentPlan: "Plano Atual",
   },
 }
 

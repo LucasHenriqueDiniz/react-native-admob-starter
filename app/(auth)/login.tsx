@@ -1,4 +1,4 @@
-import { Button } from "components/index"
+import { Button } from "components/Button"
 import { Screen } from "components/Screen"
 import * as Crypto from "expo-crypto"
 import { Image } from "expo-image"
@@ -13,34 +13,50 @@ import isValidEmail from "utils/isValidEmail"
 
 const LOGO_URL = require("assets/images/sora-icon.png")
 
+interface FormState {
+  email: string
+  password: string
+  showPassword: boolean
+  error: string | null
+}
+
 export default function LoginScreen() {
   const { theme } = useAppTheme()
   const { t } = useTranslation()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [formState, setFormState] = useState<FormState>({
+    email: "",
+    password: "",
+    showPassword: false,
+    error: null,
+  })
+  const [loading, setLoading] = useState<boolean>(false)
   const login = useUserStore((state) => state.login)
+
+  const updateForm = (updates: Partial<FormState>) => {
+    setFormState((prev) => ({ ...prev, ...updates }))
+  }
 
   const handleLogin = async () => {
     try {
-      setError(null)
+      updateForm({ error: null })
       setLoading(true)
+      const hasPassword = formState.password.length > 6
+      const hasEmail = formState.email.length > 0
+      const validEmail = isValidEmail(formState.email)
 
       // Validações básicas
-      if (!email.trim() || !password.trim()) {
-        setError(t("error.emptyFields"))
+      if (!hasEmail || !hasPassword) {
+        updateForm({ error: t("error.emptyFields") })
         return
       }
 
-      if (!isValidEmail(email)) {
-        setError(t("error.invalidEmail"))
+      if (!validEmail) {
+        updateForm({ error: t("error.invalidEmail") })
         return
       }
 
-      if (password.length < 6) {
-        setError(t("error.passwordTooShort"))
+      if (!hasPassword) {
+        updateForm({ error: t("error.passwordTooShort") })
         return
       }
 
@@ -53,18 +69,20 @@ export default function LoginScreen() {
       // Login bem sucedido
       login({
         id,
-        email: email.toLowerCase().trim(),
-        name: email.split("@")[0], // Simplificado para exemplo
+        email: formState.email.toLowerCase().trim(),
+        name: formState.email.split("@")[0], // Simplificado para exemplo
       })
 
       router.back()
     } catch (err) {
-      setError(t("error.generic"))
+      updateForm({ error: t("error.generic") })
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
+
+  const isFormValid = formState.email.length > 0 && formState.password.length > 0
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
@@ -87,57 +105,57 @@ export default function LoginScreen() {
           <TextInput
             mode="outlined"
             label={t("auth.email")}
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text)
-              setError(null)
-            }}
+            value={formState.email}
+            onChangeText={(text) => updateForm({ email: text, error: null })}
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
             style={styles.input}
             left={<TextInput.Icon icon="email" />}
-            error={!!error && error.includes("email")}
+            error={!!formState.error && formState.error.includes("email")}
           />
 
           <TextInput
             mode="outlined"
             label={t("auth.password")}
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text)
-              setError(null)
-            }}
-            secureTextEntry={!showPassword}
+            value={formState.password}
+            onChangeText={(text) => updateForm({ password: text, error: null })}
+            secureTextEntry={!formState.showPassword}
             autoCapitalize="none"
             style={styles.input}
             left={<TextInput.Icon icon="lock" />}
             right={
               <TextInput.Icon
-                icon={showPassword ? "eye-off" : "eye"}
-                onPress={() => setShowPassword(!showPassword)}
+                icon={formState.showPassword ? "eye-off" : "eye"}
+                onPress={() => updateForm({ showPassword: !formState.showPassword })}
               />
             }
-            error={!!error && error.includes("password")}
+            error={!!formState.error && formState.error.includes("password")}
           />
 
-          {error && <Text style={[styles.errorText, { color: theme.colors.error }]}>{error}</Text>}
+          {formState.error && (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>{formState.error}</Text>
+          )}
 
           <Button
             variant="contained"
             onPress={handleLogin}
             style={styles.loginButton}
             loading={loading}
-            disabled={loading || !email || !password}
+            disabled={!isFormValid}
           >
             {t("auth.login")}
           </Button>
 
-          <TouchableRipple onPress={() => router.push("/(auth)/forgot-password")}>
-            <Text style={[styles.forgotPassword, { color: theme.colors.primary }]}>
-              {t("auth.forgotPassword")}
-            </Text>
-          </TouchableRipple>
+          <Button
+            variant="text"
+            uppercase={false}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{ paddingVertical: 6 }}
+            onPress={() => router.push("/(auth)/forgot-password")}
+          >
+            {t("auth.forgotPassword")}
+          </Button>
         </View>
 
         <View style={styles.dividerContainer}>
@@ -152,23 +170,27 @@ export default function LoginScreen() {
           <Button
             variant="outlined"
             icon="google"
+            uppercase={false}
+            // eslint-disable-next-line react-native/no-inline-styles
             style={styles.socialButton}
             onPress={() => {
               /* Implementar login com Google */
             }}
           >
-            Google
+            {t("common.google")}
           </Button>
 
           <Button
             variant="outlined"
             icon="apple"
+            uppercase={false}
+            // eslint-disable-next-line react-native/no-inline-styles
             style={styles.socialButton}
             onPress={() => {
               /* Implementar login com Apple */
             }}
           >
-            Apple
+            {t("common.apple")}
           </Button>
         </View>
 
@@ -213,10 +235,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 32,
   },
-  forgotPassword: {
-    marginTop: 16,
-    textAlign: "center",
-  },
   form: {
     marginTop: 32,
   },
@@ -242,10 +260,12 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     flex: 1,
+    maxWidth: 160,
   },
   socialButtons: {
     flexDirection: "row",
     gap: 16,
+    justifyContent: "center",
   },
   subtitle: {
     marginTop: 8,

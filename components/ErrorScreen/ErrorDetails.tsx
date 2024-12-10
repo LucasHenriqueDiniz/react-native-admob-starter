@@ -1,8 +1,9 @@
 import { ErrorInfo } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
-import { Button, Text, useTheme } from "react-native-paper"
+import { Text } from "react-native-paper"
 import { useTranslation } from "react-i18next"
-import { Screen } from "components"
+import { Button, Screen } from "components"
+import { useAppTheme } from "hooks/useAppTheme"
 
 export interface ErrorDetailsProps {
   error: Error
@@ -12,7 +13,7 @@ export interface ErrorDetailsProps {
 
 export function ErrorDetails(props: ErrorDetailsProps) {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const { theme } = useAppTheme()
 
   return (
     <Screen preset="fixed" safeAreaEdges={["top", "bottom"]}>
@@ -36,11 +37,7 @@ export function ErrorDetails(props: ErrorDetailsProps) {
           </Text>
         </ScrollView>
 
-        <Button
-          mode="contained"
-          onPress={props.onReset}
-          style={[styles.resetButton, { backgroundColor: theme.colors.error }]}
-        >
+        <Button variant="danger-outline" onPress={props.onReset}>
           {t("error.reset")}
         </Button>
       </View>
@@ -63,9 +60,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 16,
     width: "100%",
-  },
-  resetButton: {
-    paddingHorizontal: 32,
   },
   topSection: {
     alignItems: "center",

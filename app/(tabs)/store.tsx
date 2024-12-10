@@ -1,14 +1,11 @@
-import { Screen } from "components/Screen"
-import { useAppTheme } from "hooks/useAppTheme"
-import { useCountdown } from "hooks/useCountdown"
-import { useRewardedAd } from "hooks/useRewardedAd"
+import { Button, Icon, Screen } from "components"
+import { useAppTheme, useCountdown, useRewardedAd } from "hooks"
 import { useToast } from "hooks/useToast"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { Card, Text } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
-import { Button, Icon } from "components"
 
 const AD_COOLDOWN = 5 * 60 * 1000 // 5 minutes in milliseconds
 

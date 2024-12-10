@@ -1,7 +1,9 @@
-import { StyleSheet, View } from "react-native"
-import { Modal, Portal, RadioButton, useTheme, Button, Text } from "react-native-paper"
-import { useTranslation } from "react-i18next"
+import { Button } from "components"
 import { languages } from "hooks/useAppLanguage"
+import { useAppTheme } from "hooks/useAppTheme"
+import { useTranslation } from "react-i18next"
+import { StyleSheet, View } from "react-native"
+import { Modal, Portal, RadioButton, Text } from "react-native-paper"
 import type { Language } from "types"
 
 interface LanguageModalProps {
@@ -17,7 +19,7 @@ export function LanguageModal({
   selectedLanguage,
   onSelectLanguage,
 }: LanguageModalProps) {
-  const theme = useTheme()
+  const { theme } = useAppTheme()
   const { t } = useTranslation()
 
   return (
@@ -47,7 +49,7 @@ export function LanguageModal({
         </RadioButton.Group>
 
         <View style={styles.buttons}>
-          <Button mode="text" onPress={onDismiss}>
+          <Button variant="text" onPress={onDismiss}>
             {t("common.cancel")}
           </Button>
         </View>

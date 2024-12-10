@@ -9,12 +9,20 @@ interface UserProfile {
   avatar?: string
 }
 
+interface Subscription {
+  id: string
+  name: string
+  price: number
+  description: string
+}
+
 interface UserStore {
   credits: number
   lastAdWatch: number | null
   hasBannerRemoved: boolean
   isLoggedIn: boolean
   profile: UserProfile | null
+  subscription: Subscription | null
   addCredits: (amount: number) => void
   removeCredits: (amount: number) => void
   setLastAdWatch: (timestamp: number) => void
@@ -22,6 +30,7 @@ interface UserStore {
   login: (profile: UserProfile) => void
   logout: () => void
   updateProfile: (profile: Partial<UserProfile>) => void
+  getSubscription: (subscription: Subscription) => void
 }
 
 export const useUserStore = create<UserStore>()(
@@ -30,6 +39,7 @@ export const useUserStore = create<UserStore>()(
       credits: 0,
       lastAdWatch: null,
       hasBannerRemoved: false,
+      subscription: null,
       isLoggedIn: false,
       profile: null,
       addCredits: (amount) => set((state) => ({ credits: state.credits + amount })),
@@ -38,6 +48,7 @@ export const useUserStore = create<UserStore>()(
       removeBanner: () => set({ hasBannerRemoved: true }),
       login: (profile) => set({ isLoggedIn: true, profile }),
       logout: () => set({ isLoggedIn: false, profile: null }),
+      getSubscription: (subscription) => set({ subscription }),
       updateProfile: (updates) =>
         set((state) => ({
           profile: state.profile ? { ...state.profile, ...updates } : null,

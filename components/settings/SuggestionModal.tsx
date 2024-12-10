@@ -1,12 +1,12 @@
+import { Button, Icon } from "components"
 import config from "config/index"
 import { getLocales } from "expo-localization"
-import { useAppLanguage } from "hooks/useAppLanguage"
-import { useToast } from "hooks/useToast"
+import { useAppLanguage, useAppTheme, useToast } from "hooks"
 import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { ScrollView, StyleSheet, View } from "react-native"
-import { Button, Modal, Portal, Text, TextInput, useTheme } from "react-native-paper"
-import { DiscordPayload } from "types/index"
+import { Modal, Portal, Text, TextInput } from "react-native-paper"
+import { DiscordPayload } from "types"
 import isValidEmail from "utils/isValidEmail"
 import sendFeedbackToDiscord from "utils/sendFeedback"
 import { storage } from "utils/storage"
@@ -18,7 +18,7 @@ interface SuggestionModalProps {
 
 export function SuggestionModal({ visible, onDismiss }: SuggestionModalProps) {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const { theme } = useAppTheme()
   const { language } = useAppLanguage()
   const showToast = useToast()
   const [loading, setLoading] = useState(false)
@@ -82,58 +82,75 @@ export function SuggestionModal({ visible, onDismiss }: SuggestionModalProps) {
       <Modal
         visible={visible}
         onDismiss={onDismiss}
-        contentContainerStyle={[styles.modal, { backgroundColor: theme.colors.background }]}
+        contentContainerStyle={[styles.modal, { backgroundColor: theme.colors.surface }]}
       >
-        <ScrollView>
-          <Text
-            variant="headlineMedium"
-            style={[styles.title, { color: theme.colors.onBackground }]}
-          >
+        <View style={styles.content}>
+          <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary }]}>
+            <Icon icon="message-draw" size={32} color={theme.colors.onPrimary} />
+          </View>
+
+          <Text variant="headlineSmall" style={styles.title}>
             {t("settings.feedback.title")}
           </Text>
 
-          <TextInput
-            label={t("settings.feedback.title")}
-            onChangeText={(text) => (formRef.current.title = text)}
-            style={styles.input}
-            disabled={loading}
-            placeholder={t("settings.feedback.titlePlaceholder")}
-          />
+          <Text variant="bodyMedium" style={styles.subtitle}>
+            {t("settings.feedback.subtitle")}
+          </Text>
 
-          <TextInput
-            label={t("settings.feedback.email")}
-            onChangeText={(text) => (formRef.current.email = text)}
-            keyboardType="email-address"
-            style={styles.input}
-            disabled={loading}
-            placeholder={t("settings.feedback.emailPlaceholder")}
-          />
-
-          <TextInput
-            label={t("settings.feedback.content")}
-            onChangeText={(text) => (formRef.current.content = text)}
-            multiline
-            numberOfLines={4}
-            style={styles.input}
-            disabled={loading}
-            placeholder={t("settings.feedback.descriptionPlaceholder")}
-          />
-
-          <View style={styles.buttons}>
-            <Button onPress={onDismiss} style={styles.button}>
-              {t("common.cancel")}
-            </Button>
-            <Button
-              mode="contained"
-              onPress={handleSubmit}
-              style={styles.button}
-              loading={loading}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <TextInput
+              mode="outlined"
+              label={t("settings.feedback.title")}
+              onChangeText={(text) => (formRef.current.title = text)}
+              style={styles.input}
               disabled={loading}
+              placeholder={t("settings.feedback.titlePlaceholder")}
+              left={<TextInput.Icon icon="format-title" />}
+            />
+
+            <TextInput
+              mode="outlined"
+              label={t("settings.feedback.email")}
+              onChangeText={(text) => (formRef.current.email = text)}
+              keyboardType="email-address"
+              style={styles.input}
+              disabled={loading}
+              placeholder={t("settings.feedback.emailPlaceholder")}
+              left={<TextInput.Icon icon="email" />}
+            />
+
+            <TextInput
+              mode="outlined"
+              label={t("settings.feedback.content")}
+              onChangeText={(text) => (formRef.current.content = text)}
+              multiline
+              numberOfLines={4}
+              style={[styles.input, styles.textArea]}
+              disabled={loading}
+              placeholder={t("settings.feedback.descriptionPlaceholder")}
+              left={<TextInput.Icon icon="text" />}
+            />
+          </ScrollView>
+
+          <View style={styles.buttonContainer}>
+            <Button
+              variant="contained"
+              onPress={handleSubmit}
+              loading={loading}
+              style={styles.button}
+              icon="send"
             >
               {t("common.send")}
             </Button>
+            <Button variant="outlined" onPress={onDismiss} style={styles.button}>
+              {t("common.cancel")}
+            </Button>
           </View>
-        </ScrollView>
+        </View>
       </Modal>
     </Portal>
   )
@@ -141,25 +158,60 @@ export function SuggestionModal({ visible, onDismiss }: SuggestionModalProps) {
 
 const styles = StyleSheet.create({
   button: {
-    minWidth: 100,
+    flex: 1,
+    maxWidth: 200,
+    minHeight: 48,
   },
-  buttons: {
+  buttonContainer: {
     flexDirection: "row",
     gap: 8,
-    justifyContent: "flex-end",
-    marginTop: 16,
+    justifyContent: "center",
+    marginTop: 24,
+    paddingVertical: 16,
+    width: "100%",
+  },
+  content: {
+    alignItems: "center",
+    width: "100%",
+  },
+  iconContainer: {
+    alignItems: "center",
+    borderRadius: 40,
+    height: 80,
+    justifyContent: "center",
+    marginBottom: 16,
+    width: 80,
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 16,
+    width: "100%",
   },
   modal: {
-    borderRadius: 8,
+    alignSelf: "center",
+    borderRadius: 16,
     margin: 20,
-    maxHeight: "80%",
-    padding: 20,
+    maxHeight: "90%",
+    maxWidth: 500,
+    padding: 24,
+    width: "90%",
+  },
+  scrollContent: {
+    paddingBottom: 8,
+  },
+  scrollView: {
+    flexGrow: 0,
+    width: "100%",
+  },
+  subtitle: {
+    marginBottom: 24,
+    opacity: 0.7,
+    textAlign: "center",
+  },
+  textArea: {
+    minHeight: 100,
   },
   title: {
-    marginBottom: 20,
+    marginBottom: 8,
     textAlign: "center",
   },
 })

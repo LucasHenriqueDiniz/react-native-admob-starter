@@ -12,6 +12,8 @@ const en = {
       "Watch a short video and earn 10 credits as a reward! It only takes a moment.",
     notFound: "404 - Page Not Found",
     return: "Return to Home",
+    google: "Google",
+    apple: "Apple",
   },
   rateUs: {
     title: "Enjoying the App?",
@@ -143,6 +145,8 @@ const en = {
   profile: {
     credits: "Credits",
     logout: "Sign Out",
+    noPlan: "Free",
+    currentPlan: "Current Plan",
   },
 }
 

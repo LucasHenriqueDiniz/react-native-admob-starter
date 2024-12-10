@@ -1,12 +1,9 @@
-/* eslint-disable react-native/no-color-literals */
+import { Button, Icon } from "components"
+import { useAppTheme, useRewardedAd, useRewardedAdPrompt } from "hooks"
 import { useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { Button, Modal, Portal, Text } from "react-native-paper"
-import { useRewardedAd } from "../../hooks/useRewardedAd"
 import { useTranslation } from "react-i18next"
-import { useRewardedAdPrompt } from "hooks/useRewardedAdPrompt"
-import { useAppTheme } from "hooks/useAppTheme"
-import FontAwesome from "@expo/vector-icons/FontAwesome"
+import { StyleSheet, View } from "react-native"
+import { Modal, Portal, Text } from "react-native-paper"
 import { useUserStore } from "store/useUserStore"
 
 export function RewardedAdPrompt() {
@@ -44,7 +41,7 @@ export function RewardedAdPrompt() {
       >
         <View style={styles.content}>
           <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary }]}>
-            <FontAwesome name="gift" size={32} color={theme.colors.onPrimary} />
+            <Icon icon="gift" size={32} color={theme.colors.onPrimary} />
           </View>
           <Text variant="headlineSmall" style={styles.title}>
             {t("common.wantToEarnCredits")}
@@ -54,15 +51,15 @@ export function RewardedAdPrompt() {
           </Text>
           <View style={styles.buttonContainer}>
             <Button
-              mode="contained"
+              variant="contained"
               onPress={handleShowAd}
-              style={styles.button}
-              disabled={loading}
+              loading={loading}
               icon={loading ? "loading" : "play"}
+              style={styles.button}
             >
               {loading ? t("common.loading") : t("common.watchAd")}
             </Button>
-            <Button mode="outlined" onPress={hide} style={styles.button} disabled={loading}>
+            <Button variant="outlined" onPress={hide} disabled={loading} style={styles.button}>
               {t("common.maybeLater")}
             </Button>
           </View>
@@ -74,16 +71,21 @@ export function RewardedAdPrompt() {
 
 const styles = StyleSheet.create({
   button: {
-    marginHorizontal: 8,
-    minWidth: 120,
+    flex: 1,
+    maxWidth: 200,
+    minHeight: 48,
   },
   buttonContainer: {
     flexDirection: "row",
+    gap: 8,
     justifyContent: "center",
     marginTop: 24,
+    paddingVertical: 16,
+    width: "100%",
   },
   content: {
     alignItems: "center",
+    maxWidth: 500,
   },
   iconContainer: {
     alignItems: "center",
@@ -98,9 +100,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modal: {
+    alignSelf: "center",
     borderRadius: 8,
     margin: 20,
+    maxWidth: 500,
     padding: 20,
+    width: "90%",
   },
   title: {
     textAlign: "center",

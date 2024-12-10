@@ -1,10 +1,10 @@
+import { Button, Icon } from "components"
+import { useAppTheme } from "hooks"
 import { useEffect, useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { Button, Modal, Portal, Text } from "react-native-paper"
 import { useTranslation } from "react-i18next"
+import { StyleSheet, View } from "react-native"
+import { Modal, Portal, Text } from "react-native-paper"
 import { useNetworkStore } from "store/useNetworkStore"
-import { useAppTheme } from "hooks/useAppTheme"
-import FontAwesome from "@expo/vector-icons/FontAwesome"
 
 export function NetworkModal() {
   const { t } = useTranslation()
@@ -52,7 +52,7 @@ export function NetworkModal() {
       >
         <View style={styles.content}>
           <View style={[styles.iconContainer, { backgroundColor: theme.colors.error }]}>
-            <FontAwesome name="wifi" size={32} color={theme.colors.onError} />
+            <Icon icon="wifi" size={32} color={theme.colors.onError} />
           </View>
           <Text variant="headlineSmall" style={styles.title}>
             {t("network.title")}
@@ -61,10 +61,11 @@ export function NetworkModal() {
             {t("network.message")}
           </Text>
           <Button
-            mode="contained"
+            variant="danger"
             onPress={handleCheckConnection}
-            style={styles.button}
             loading={isChecking}
+            fullWidth
+            style={styles.button}
           >
             {isChecking ? t("common.loading") : t("common.ok")}
           </Button>
@@ -76,9 +77,9 @@ export function NetworkModal() {
 
 const styles = StyleSheet.create({
   button: {
-    marginTop: 24,
-    minWidth: 120,
+    marginTop: 12,
   },
+
   content: {
     alignItems: "center",
   },

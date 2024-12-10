@@ -13,6 +13,8 @@ const fr: Translations = {
     watchShortVideoToEarnCredits: "Regardez une courte vidéo pour gagner des crédits",
     notFound: "404 - Page non trouvée",
     return: "Retour à la page principale",
+    google: "Google",
+    apple: "Apple",
   },
   network: {
     title: "Pas de connexion internet",
@@ -144,7 +146,9 @@ const fr: Translations = {
   },
   profile: {
     logout: "Déconnexion",
-    credits: "Crédits: {{count}}",
+    credits: "Crédits",
+    noPlan: "Gratuit",
+    currentPlan: "Plan actuel",
   },
 }
 

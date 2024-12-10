@@ -1,11 +1,12 @@
-import { StyleSheet, View, Linking } from "react-native"
-import { Button, Modal, Portal, Text, Checkbox } from "react-native-paper"
-import { useTranslation } from "react-i18next"
-import { useRateUsStore } from "store/useRateUsStore"
-import { useAppTheme } from "hooks/useAppTheme"
-import Config from "config"
 import FontAwesome from "@expo/vector-icons/FontAwesome"
+import { Button } from "components"
+import Config from "config"
+import { useAppTheme } from "hooks/useAppTheme"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { Linking, StyleSheet, View } from "react-native"
+import { Checkbox, Modal, Portal, Text } from "react-native-paper"
+import { useRateUsStore } from "store/useRateUsStore"
 
 export function RateUsModal() {
   const { t } = useTranslation()
@@ -57,10 +58,10 @@ export function RateUsModal() {
             {t("rateUs.message")}
           </Text>
           <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={handleRate} style={styles.button}>
+            <Button variant="contained" onPress={handleRate} style={styles.button}>
               {t("rateUs.rateNow")}
             </Button>
-            <Button mode="outlined" onPress={handleCancel} style={styles.button}>
+            <Button variant="outlined" onPress={handleCancel} style={styles.button}>
               {t("common.cancel")}
             </Button>
           </View>
@@ -81,13 +82,17 @@ export function RateUsModal() {
 
 const styles = StyleSheet.create({
   button: {
-    marginHorizontal: 8,
-    minWidth: 120,
+    flex: 1,
+    maxWidth: 200,
+    minHeight: 48,
   },
   buttonContainer: {
     flexDirection: "row",
+    gap: 8,
     justifyContent: "center",
-    marginTop: 24,
+    marginTop: 16,
+    paddingVertical: 16,
+    width: "100%",
   },
   checkboxContainer: {
     alignItems: "center",

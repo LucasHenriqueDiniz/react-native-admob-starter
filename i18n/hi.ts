@@ -13,6 +13,8 @@ const hi: Translations = {
     watchShortVideoToEarnCredits: "छोटे वीडियो देखकर क्रेडिट्स अर्जित करें",
     notFound: "404 - पृष्ठ नहीं मिल सका",
     return: "होम पृष्ठ पर वापस जाएं",
+    google: "गूगल",
+    apple: "आपल",
   },
   rateUs: {
     title: "अपनी अनुप्रयोग कैसी है?",
@@ -143,7 +145,9 @@ const hi: Translations = {
   },
   profile: {
     logout: "लॉग आउट",
-    credits: "क्रेडिट्स: {{count}}",
+    credits: "क्रेडिट्स",
+    noPlan: "फ्री",
+    currentPlan: "वर्तमान प्रोग्राम",
   },
 }
 

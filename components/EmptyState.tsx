@@ -1,6 +1,8 @@
-import { Image, ImageProps, ImageStyle, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import { Button, Text, useTheme } from "react-native-paper"
+import { Button } from "components"
+import { useAppTheme } from "hooks"
 import { useTranslation } from "react-i18next"
+import { Image, ImageProps, ImageStyle, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { Text } from "react-native-paper"
 
 const sadFace = require("assets/images/sad-face.png")
 
@@ -71,7 +73,7 @@ export function EmptyState(props: EmptyStateProps) {
   } = props
 
   const { t } = useTranslation()
-  const theme = useTheme()
+  const { isDark, theme } = useAppTheme()
 
   const isImagePresent = !!imageSource
   const isHeadingPresent = !!heading
@@ -85,7 +87,7 @@ export function EmptyState(props: EmptyStateProps) {
           source={imageSource}
           {...ImageProps}
           style={[styles.image, $imageStyleOverride]}
-          tintColor={theme.dark ? theme.colors.surfaceVariant : undefined}
+          tintColor={isDark ? theme.colors.surfaceVariant : undefined}
         />
       )}
 
@@ -102,7 +104,7 @@ export function EmptyState(props: EmptyStateProps) {
       )}
 
       {isButtonPresent && buttonOnPress && (
-        <Button mode="contained" onPress={buttonOnPress} style={styles.button} {...ButtonProps}>
+        <Button variant="contained" onPress={buttonOnPress} style={styles.button} {...ButtonProps}>
           {t(button)}
         </Button>
       )}
