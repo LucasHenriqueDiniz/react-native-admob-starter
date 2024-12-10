@@ -46,23 +46,23 @@ const BaseConfig: ConfigBaseProps = {
 
   ads: {
     rewardedAdUnitId: __DEV__
-      ? "ca-app-pub-3940256099942544/5224354917" // TestIds.REWARDED
-      : "ca-app-pub-2875410688436106/YOUR_REWARDED_ID",
+      ? "ca-app-pub-1234566789098765/1234567890" // Test ID
+      : "ca-app-pub-1234566789098765/1234567890", // Seu novo Ad Unit ID
     bannerAdUnitId: __DEV__
-      ? "ca-app-pub-3940256099942544/6300978111" // TestIds.BANNER
-      : "ca-app-pub-2875410688436106/YOUR_BANNER_ID",
+      ? "ca-app-pub-1234566789098765/1234567890" // Test ID
+      : "ca-app-pub-1234566789098765/1234567890", // Seu novo Ad Unit ID
   },
-  API_URL: __DEV__ ? "https://api.sora.com" : "https://api.sora.com",
+  API_URL: __DEV__ ? "https://api.yourapp.com" : "https://api.yourapp.com",
   api: {
     discordWebhook: __DEV__
       ? "https://discord.com/api/webhooks/1315518948636098640/cQ5HsKGiFJsWYt4uhMykuS65vkRfxFnj7yBSBedHeal5Sfb2yqfY7znhhVmd1n2QUVXN" // TestIds.DISCORD_WEBHOOK
       : "https://discord.com/api/webhooks/1312153065691942952/dqxSVAFvXApMg7CFIL2JoZa70tQHfH4O4Uc4NlZNG5CtQzwCkW-XsjmLW3gmc3f8OTtn",
   },
-  appName: "Sora Template",
+  appName: "Your app name",
   version: "1.0.0",
   privacyUrl: "https://www.google.com",
   termsUrl: "https://www.google.com",
-  rateUsUrl: "https://play.google.com/store/apps/details?id=com.anonymous.admob",
+  rateUsUrl: "https://play.google.com/store/apps/details?id=com.anonymous.yourapp",
   subscription: {
     productIds: {
       monthly: "your.monthly.subscription.id",
@@ -71,8 +71,8 @@ const BaseConfig: ConfigBaseProps = {
   },
   revenueCat: {
     apiKey: __DEV__
-      ? "appl_YOUR_PUBLIC_SDK_KEY" // iOS
-      : "goog_YOUR_PUBLIC_SDK_KEY", // Android
+      ? "appl_YOUR_NEW_PUBLIC_SDK_KEY" // Novo app iOS
+      : "goog_YOUR_NEW_PUBLIC_SDK_KEY", // Novo app Android
   },
 }
 

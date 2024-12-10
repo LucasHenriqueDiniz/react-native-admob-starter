@@ -62,7 +62,9 @@ export default function RootLayout() {
       <ErrorBoundary catchErrors={Config.catchErrors}>
         <KeyboardProvider>
           <ThemeProvider>
+            {/* Remove this line if you're not using ads in your app */}
             <AdsProvider>
+              {/* Remove this line if you're not using subscriptions in your app */}
               <SubscriptionProvider>
                 <StatusBar style={isDark ? "light" : "dark"} />
                 <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
