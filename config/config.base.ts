@@ -2,6 +2,7 @@ export interface ConfigBaseProps {
   persistNavigation: "always" | "dev" | "prod" | "never"
   catchErrors: "always" | "dev" | "prod" | "never"
   exitRoutes: string[]
+  API_URL: string
   ads: {
     rewardedAdUnitId: string
     bannerAdUnitId: string
@@ -42,7 +43,7 @@ const BaseConfig: ConfigBaseProps = {
       ? "ca-app-pub-3940256099942544/6300978111" // TestIds.BANNER
       : "ca-app-pub-2875410688436106/YOUR_BANNER_ID",
   },
-
+  API_URL: __DEV__ ? "https://api.sora.com" : "https://api.sora.com",
   api: {
     discordWebhook: __DEV__
       ? "https://discord.com/api/webhooks/1315518948636098640/cQ5HsKGiFJsWYt4uhMykuS65vkRfxFnj7yBSBedHeal5Sfb2yqfY7znhhVmd1n2QUVXN" // TestIds.DISCORD_WEBHOOK
