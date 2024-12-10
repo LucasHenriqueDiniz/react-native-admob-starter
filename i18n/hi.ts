@@ -96,6 +96,7 @@ const hi: Translations = {
       titlePlaceholder: "शीर्षक",
       descriptionPlaceholder: "विवरण",
       emailPlaceholder: "ईमेल",
+      subtitle: "अपने फीडबैक और सुझाव भेजें",
     },
   },
   premium: {

@@ -90,6 +90,7 @@ const ar: Translations = {
       titlePlaceholder: "العنوان",
       descriptionPlaceholder: "الوصف",
       emailPlaceholder: "البريد الالكتروني",
+      subtitle: "إرسال تعليقاتك واقتراحاتك",
     },
   },
   premium: {

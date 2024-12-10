@@ -21,12 +21,12 @@ export default function ForgotPasswordScreen() {
       setLoading(true)
 
       if (!email.trim()) {
-        setError(t("auth.errorEmptyEmail"))
+        setError(t("error.emptyEmail"))
         return
       }
 
       if (!isValidEmail(email)) {
-        setError(t("auth.errorInvalidEmail"))
+        setError(t("error.invalidEmail"))
         return
       }
 
@@ -36,7 +36,7 @@ export default function ForgotPasswordScreen() {
       showToast(t("auth.resetPasswordSuccess"))
       router.back()
     } catch (err) {
-      setError(t("auth.errorGeneric"))
+      setError(t("error.generic"))
       console.error(err)
     } finally {
       setLoading(false)

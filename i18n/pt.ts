@@ -66,6 +66,7 @@ const pt: Translations = {
       titlePlaceholder: "Título",
       descriptionPlaceholder: "Conteúdo",
       emailPlaceholder: "Email",
+      subtitle: "Envie seu feedback e sugestões",
     },
   },
   premium: {

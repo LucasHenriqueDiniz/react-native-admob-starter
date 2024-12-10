@@ -80,6 +80,7 @@ web-build/
 
 # Test generated files
 *.js.meta
+/coverage
 
 # Gradle
 /build/
@@ -107,3 +108,4 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+

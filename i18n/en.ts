@@ -59,6 +59,7 @@ const en = {
     about: "About the application",
     feedback: {
       title: "Feedback",
+      subtitle: "Send us your feedback and suggestions",
       email: "Email",
       content: "Content",
       feedbackThanks: "Thanks for your feedback!",

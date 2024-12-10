@@ -88,6 +88,7 @@ const ko: Translations = {
       titlePlaceholder: "제목",
       descriptionPlaceholder: "내용",
       emailPlaceholder: "이메일",
+      subtitle: "피드백 및 제안 보내기",
     },
   },
   tabs: {

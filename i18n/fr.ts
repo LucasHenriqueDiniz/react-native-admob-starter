@@ -91,6 +91,7 @@ const fr: Translations = {
       titlePlaceholder: "Titre",
       descriptionPlaceholder: "Description",
       emailPlaceholder: "E-mail",
+      subtitle: "Envoyez-nous vos commentaires et suggestions",
     },
   },
   premium: {

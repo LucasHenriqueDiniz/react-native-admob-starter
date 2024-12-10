@@ -32,22 +32,22 @@ export default function SignUpScreen() {
 
       // Validações básicas
       if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
-        setError(t("auth.errorEmptyFields"))
+        setError(t("error.emptyFields"))
         return
       }
 
       if (!isValidEmail(email)) {
-        setError(t("auth.errorInvalidEmail"))
+        setError(t("error.invalidEmail"))
         return
       }
 
       if (password.length < 6) {
-        setError(t("auth.errorPasswordTooShort"))
+        setError(t("error.passwordTooShort"))
         return
       }
 
       if (password !== confirmPassword) {
-        setError(t("auth.errorPasswordsDontMatch"))
+        setError(t("error.passwordsDontMatch"))
         return
       }
 
@@ -66,7 +66,7 @@ export default function SignUpScreen() {
 
       router.back()
     } catch (err) {
-      setError(t("auth.errorGeneric"))
+      setError(t("error.generic"))
       console.error(err)
     } finally {
       setLoading(false)

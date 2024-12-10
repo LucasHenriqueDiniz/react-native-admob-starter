@@ -66,6 +66,7 @@ const ja: Translations = {
       titlePlaceholder: "タイトル",
       descriptionPlaceholder: "内容",
       emailPlaceholder: "メール",
+      subtitle: "フィードバックと提案を送信",
     },
   },
   premium: {

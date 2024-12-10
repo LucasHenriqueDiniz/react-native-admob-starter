@@ -1,69 +1,110 @@
-import { exec } from "child_process"
+import * as fs from "fs"
+import { languages } from "hooks/useAppLanguage"
+import ar from "i18n/ar"
 import en from "i18n/en"
+import es from "i18n/es"
+import fr from "i18n/fr"
+import hi from "i18n/hi"
+import ja from "i18n/ja"
+import ko from "i18n/ko"
+import pt from "i18n/pt"
+import * as path from "path"
+import { Language } from "types/language"
+import { flattenObject } from "utils/flattenObject"
 
-// Use this array for keys that for whatever reason aren't greppable so they
-// don't hold your test suite hostage by always failing.
-const EXCEPTIONS: string[] = [
-  // "welcomeScreen:readyForLaunch",
-]
+// Helper functions first
+const IGNORED_KEYS = ["window", "@"]
 
-function iterate(obj: object, stack: string | any[], array: string[]) {
-  for (const property in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, property)) {
-      const value = (obj as any)[property]
-      if (typeof value === "object") {
-        iterate(value, `${stack}.${property}`, array)
-      } else {
-        array.push(`${stack.slice(1)}.${property}`)
-      }
-    }
-  }
+const findTranslationKeysInFile = (filePath: string): string[] => {
+  const content = fs.readFileSync(filePath, "utf8")
 
-  return array
+  // Procurar apenas por padrões específicos de uso de tradução
+  // Ex: t('chave'), t("chave")
+  const matches = content.match(/t\(['"]([\w.-]+)['"]\)/g) || []
+  return matches
+    .map((match) => match.replace(/t\(['"](.+)['"]\)/, "$1"))
+    .filter((key) => !IGNORED_KEYS.includes(key))
 }
 
-/**
- * This tests your codebase for missing i18n strings so you can avoid error strings at render time
- *
- * It was taken from https://gist.github.com/Michaelvilleneuve/8808ba2775536665d95b7577c9d8d5a1
- * and modified slightly to account for our Ignite higher order components,
- * which take 'tx' and 'fooTx' props.
- * The grep command is nasty looking, but it's essentially searching the codebase for a few different things:
- *
- * tx="*"
- * Tx=""
- * tx={""}
- * Tx={""}
- * translate(""
- *
- * and then grabs the i18n key between the double quotes
- *
- * This approach isn't 100% perfect. If you are storing your key string in a variable because you
- * are setting it conditionally, then it won't be picked up.
- *
- */
+const findFilesRecursively = (dir: string): string[] => {
+  let results: string[] = []
+  const items = fs.readdirSync(dir)
 
+  items.forEach((item) => {
+    const fullPath = path.join(dir, item)
+    const stat = fs.statSync(fullPath)
+
+    if (stat.isDirectory()) {
+      results = results.concat(findFilesRecursively(fullPath))
+    } else if (
+      stat.isFile() &&
+      (fullPath.endsWith(".tsx") || fullPath.endsWith(".ts")) &&
+      !fullPath.endsWith(".test.ts") &&
+      !fullPath.endsWith(".test.tsx")
+    ) {
+      results.push(fullPath)
+    }
+  })
+
+  return results
+}
+
+const findTranslationKeysInFiles = (): string[] => {
+  const usedKeys: string[] = []
+  const appDir = path.join(process.cwd(), "app")
+  const componentsDir = path.join(process.cwd(), "components")
+
+  const files = [...findFilesRecursively(appDir), ...findFilesRecursively(componentsDir)]
+
+  files.forEach((file: string) => {
+    const keys = findTranslationKeysInFile(file)
+    usedKeys.push(...keys)
+  })
+
+  return [...new Set(usedKeys)] // Remove duplicates
+}
+
+// Test suite
 describe("i18n", () => {
-  test("There are no missing keys", (done) => {
-    // Actual command output:
-    // grep "[T\|t]x=[{]\?\"\S*\"[}]\?\|translate(\"\S*\"" -ohr './app' | grep -o "\".*\""
-    const command = `grep "[T\\|t]x=[{]\\?\\"\\S*\\"[}]\\?\\|translate(\\"\\S*\\"" -ohr './app' | grep -o "\\".*\\""`
-    exec(command, (_, stdout) => {
-      const allTranslationsDefinedOld = iterate(en, "", [])
-      // Replace first instance of "." because of i18next namespace separator
-      const allTranslationsDefined = allTranslationsDefinedOld.map((key: string) =>
-        key.replace(".", ":"),
-      )
-      const allTranslationsUsed = stdout.replace(/"/g, "").split("\n")
-      allTranslationsUsed.splice(-1, 1)
+  describe("Translation Files", () => {
+    const languageFiles = {
+      ar,
+      en,
+      es,
+      fr,
+      hi,
+      ja,
+      ko,
+      pt,
+    }
 
-      for (let i = 0; i < allTranslationsUsed.length; i += 1) {
-        if (!EXCEPTIONS.includes(allTranslationsUsed[i])) {
-          // You can add keys to EXCEPTIONS (above) if you don't want them included in the test
-          expect(allTranslationsDefined).toContainEqual(allTranslationsUsed[i])
-        }
+    const IGNORED_KEYS = ["window"] // Keys to ignore in the test
+
+    it("should have all translations defined in EN", () => {
+      const usedKeys = findTranslationKeysInFiles()
+      const enKeys = Object.keys(flattenObject(en))
+
+      const missingInEN = usedKeys
+        .filter((key) => !IGNORED_KEYS.includes(key))
+        .filter((key) => !enKeys.includes(key))
+
+      if (missingInEN.length > 0) {
+        throw new Error(
+          `Found keys being used that are not defined in EN translation file:\n${missingInEN.join("\n")}`,
+        )
       }
-      done()
+
+      // Only check other languages if all keys exist in EN
+      languages.forEach((lang) => {
+        const langKeys = Object.keys(flattenObject(languageFiles[lang.value as Language]))
+        const missingKeys = enKeys.filter((key: string) => !langKeys.includes(key))
+
+        if (missingKeys.length > 0) {
+          throw new Error(
+            `Problem in ${lang.label.toUpperCase()} (${lang.value}) language file:\nMissing keys:\n${missingKeys.join("\n")}`,
+          )
+        }
+      })
     })
-  }, 240000)
+  })
 })

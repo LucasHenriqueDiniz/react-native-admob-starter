@@ -67,6 +67,7 @@ const es: Translations = {
       titlePlaceholder: "Título",
       descriptionPlaceholder: "Descripción",
       emailPlaceholder: "Email",
+      subtitle: "Envía tus comentarios y sugerencias",
     },
   },
   premium: {
